@@ -1,33 +1,42 @@
 const appConfig = {
     title: "",
     menus: [
-        {
-            id: "webtop1",
-            name: "Webtop1",
-            icon: "fas fa-robot",
-            url: "/webtop1/",
-            active: false
-        },
-        {
-            id: "webtop2",
-            name: "Webtop2",
-            icon: "fas fa-robot",
-            url: "/webtop2/",
-            active: false
-        },
-        {
-            id: "webtop3",
-            name: "Webtop3",
-            icon: "fas fa-robot",
-            url: "/webtop3/",
-            active: false
-        },                 
+        { id: "webtop1", name: "Webtop01", icon: "fas fa-robot", url: "/webtop1/", active: false },
+        { id: "webtop2", name: "Webtop02", icon: "fas fa-robot", url: "/webtop2/", active: false },
+        { id: "webtop3", name: "Webtop03", icon: "fas fa-robot", url: "/webtop3/", active: false },
+        { id: "webtop4", name: "Webtop04", icon: "fas fa-robot", url: "/webtop4/", active: false },
+        { id: "webtop5", name: "Webtop05", icon: "fas fa-robot", url: "/webtop5/", active: false },
+        { id: "webtop6", name: "Webtop06", icon: "fas fa-robot", url: "/webtop6/", active: false },
+        { id: "webtop7", name: "Webtop07", icon: "fas fa-robot", url: "/webtop7/", active: false },
+        { id: "webtop8", name: "Webtop08", icon: "fas fa-robot", url: "/webtop8/", active: false },
+        { id: "webtop9", name: "Webtop09", icon: "fas fa-robot", url: "/webtop9/", active: false },
+        { id: "webtop10", name: "Webtop10", icon: "fas fa-robot", url: "/webtop10/", active: false },
+        { id: "webtop11", name: "Webtop11", icon: "fas fa-robot", url: "/webtop11/", active: false },
+        { id: "webtop12", name: "Webtop12", icon: "fas fa-robot", url: "/webtop12/", active: false },
+        { id: "webtop13", name: "Webtop13", icon: "fas fa-robot", url: "/webtop13/", active: false },
+        { id: "webtop14", name: "Webtop14", icon: "fas fa-robot", url: "/webtop14/", active: false },
+        { id: "webtop15", name: "Webtop15", icon: "fas fa-robot", url: "/webtop15/", active: false },
+        { id: "webtop16", name: "Webtop16", icon: "fas fa-robot", url: "/webtop16/", active: false },
+        { id: "webtop17", name: "Webtop17", icon: "fas fa-robot", url: "/webtop17/", active: false },
+        { id: "webtop18", name: "Webtop18", icon: "fas fa-robot", url: "/webtop18/", active: false },
+        { id: "webtop19", name: "Webtop19", icon: "fas fa-robot", url: "/webtop19/", active: false },
+        { id: "webtop20", name: "Webtop20", icon: "fas fa-robot", url: "/webtop20/", active: false },
+        { id: "webtop21", name: "Webtop21", icon: "fas fa-robot", url: "/webtop21/", active: false },
+        { id: "webtop22", name: "Webtop22", icon: "fas fa-robot", url: "/webtop22/", active: false },
+        { id: "webtop23", name: "Webtop23", icon: "fas fa-robot", url: "/webtop23/", active: false },
+        { id: "webtop24", name: "Webtop24", icon: "fas fa-robot", url: "/webtop24/", active: false },
+        { id: "webtop25", name: "Webtop25", icon: "fas fa-robot", url: "/webtop25/", active: false },
+        { id: "webtop26", name: "Webtop26", icon: "fas fa-robot", url: "/webtop26/", active: false },
+        { id: "webtop27", name: "Webtop27", icon: "fas fa-robot", url: "/webtop27/", active: false },
+        { id: "webtop28", name: "Webtop28", icon: "fas fa-robot", url: "/webtop28/", active: false },
+        { id: "webtop29", name: "Webtop29", icon: "fas fa-robot", url: "/webtop29/", active: false },
+        { id: "webtop30", name: "Webtop30", icon: "fas fa-robot", url: "/webtop30/", active: false },
         { 
-            id: 'manage_users',       // ID สำหรับเช็ค Permission ใน DB
+            id: 'manage_users',       
             name: 'Admin Panel', 
             icon: 'fas fa-users-cog', 
-            url: 'admin-view.html',   // ไฟล์ HTML ที่จะโหลดใส่ Iframe
-            adminOnly: true           // (Custom Flag) ระบุว่าเฉพาะ Admin
+            url: 'admin-view.html',   
+            adminOnly: true 
         }       
     ]
 };
