@@ -1,24 +1,43 @@
+# เริ่มจาก Base Image ที่คุณเลือก (Ubuntu XFCE)
 FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 
+# ป้องกันการถามคำถามระหว่างติดตั้ง (Non-interactive)
 ENV DEBIAN_FRONTEND=noninteractive
 
-# --- 🟢 กำหนดตัวแปรที่นี่ (เปลี่ยนค่าได้ตามใจชอบ) ---
-# ENV JUPYTER_TOKEN="mysecretpassword"
-# ENV JUPYTER_WORKDIR="/home/myproject"
+# 1. อัปเดตและติดตั้ง dependencies พื้นฐานที่ SET ต้องใช้
+# - git: เพื่อดึง source code
+# - python3 & pip: SET เขียนด้วย Python
+# - build-essential, libssl-dev...: จำเป็นสำหรับ compile python libraries บางตัว
+RUN apt-get update && \
+    apt-get install -y \
+    git \
+    python3 \
+    python3-pip \
+    python3-venv \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    xclip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# สร้างโฟลเดอร์สำหรับทำงาน (ตามตัวแปรที่ตั้งไว้)
-# WORKDIR ${JUPYTER_WORKDIR}
+# 2. ติดตั้ง Social Engineering Toolkit (SET)
+WORKDIR /opt
+RUN git clone https://github.com/trustedsec/social-engineer-toolkit.git setoolkit
 
-# Copy ไฟล์
-COPY requirements_python.txt .
-COPY requirements_java.txt .
-COPY install_jupyter.sh /usr/local/bin/install_jupyter.sh
+# 3. ติดตั้ง Python Requirements
+WORKDIR /opt/setoolkit
+# บังคับลงแบบ break-system-packages (สำหรับ Ubuntu รุ่นใหม่) หรือใช้ venv ก็ได้
+# แต่ใน container การลง system-wide ถือว่ายอมรับได้เพื่อให้เรียกใช้ง่าย
+RUN pip3 install -r requirements.txt --break-system-packages
 
-# รัน Script (Script จะดึงค่า ENV ข้างบนไปใช้เอง)
-RUN chmod +x /usr/local/bin/install_jupyter.sh && \
-    /usr/local/bin/install_jupyter.sh
+# 4. รัน script ติดตั้งของ SET
+RUN python3 setup.py install
 
-EXPOSE 8888
+# 5. (Optional) ปรับแต่งให้เรียกใช้ง่ายๆ
+# สร้าง Alias หรือ Symlink ถ้าระบบยังไม่มี
+RUN ln -sf /usr/local/bin/setoolkit /usr/bin/setoolkit
 
-# ใช้ Config ที่ Script สร้างไว้
-CMD ["jupyter", "lab", "--allow-root", "--config=/root/.jupyter/jupyter_lab_config.py"]
+# กลับไปที่ Home ของ user ปกติ
+WORKDIR /config
