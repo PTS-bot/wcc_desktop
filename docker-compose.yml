@@ -87,8 +87,5 @@ services:
         - PGID=1000 # Group ID
         - TZ=Asia/Bangkok 
         - SUBFOLDER=/webtop3/ 
-<<<<<<< Updated upstream
+# <<<<<<< Updated upstream
       shm_size: "1gb" 
-=======
-      shm_size: "1gb" 
->>>>>>> Stashed changes
