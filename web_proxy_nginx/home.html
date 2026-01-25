@@ -7,127 +7,61 @@
     <style>
         /* --- 🌌 Deep Space Theme --- */
         body { 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Segoe UI', sans-serif; 
-            overflow: hidden; 
-            background: #090a0f; 
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; 
+            overflow: hidden; background: #090a0f; 
+            display: flex; flex-direction: column; height: 100vh;
         }
         
-        /* Header Bar - ปรับให้ยืดหยุ่นรองรับเมนูเยอะ */
+        /* Header Bar - เน้นพื้นที่สำหรับเมนูล้วนๆ */
         .header {
-            min-height: 60px;
-            height: auto; /* ให้ความสูงขยายตามจำนวนบรรทัดเมนู */
+            min-height: 50px;
+            height: auto; 
             background: rgba(10, 10, 15, 0.95);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; 
-            flex-wrap: wrap; /* ✅ หัวใจสำคัญ: ให้เมนูขึ้นบรรทัดใหม่ได้ */
-            align-items: center; 
-            padding: 10px 20px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-            z-index: 1000; 
-            position: relative;
-            gap: 15px;
+            display: flex; flex-wrap: wrap; align-items: center; 
+            padding: 8px 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            z-index: 1000; position: relative; gap: 10px;
         }
 
         .brand { 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            color: white; 
-            letter-spacing: 1px; 
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-            white-space: nowrap;
+            font-size: 1.1rem; font-weight: bold; color: white; letter-spacing: 1px; 
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.5); white-space: nowrap;
+            margin-right: 10px;
         }
 
-        /* Menu Container - จัดการปุ่มเมนู */
+        /* Menu Container - ให้เมนูไหลได้อิสระ */
         .nav-menu { 
-            display: flex; 
-            flex-wrap: wrap; /* ✅ ให้ปุ่มเมนูตกลงมาบรรทัดใหม่เมื่อเนื้อที่เต็ม */
-            gap: 8px;
-            flex: 1; /* กินพื้นที่ที่เหลือเพื่อผลัก User Section ไปขวา */
+            display: flex; flex-wrap: wrap; gap: 6px; flex: 1;
         }
 
         .nav-item {
-            padding: 6px 14px;
+            padding: 6px 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            color: #ccc;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.3s;
-            white-space: nowrap;
+            border-radius: 4px; color: #ccc; cursor: pointer;
+            font-size: 0.85rem; transition: 0.2s; white-space: nowrap;
         }
 
         .nav-item:hover {
-            background: rgba(0, 210, 255, 0.15);
-            color: #00d2ff;
-            border-color: #00d2ff;
+            background: rgba(0, 210, 255, 0.15); color: #00d2ff; border-color: #00d2ff;
         }
 
         .nav-item.active {
-            background: #00d2ff;
-            color: #000;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+            background: #00d2ff; color: #000; font-weight: bold;
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
         }
-
-        /* User Section - ส่วนชื่อผู้ใช้และปุ่ม Logout */
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-left: auto; /* ผลักไปขวาสุด */
-            background: rgba(255, 255, 255, 0.03);
-            padding: 5px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .user-name { color: #00d2ff; font-weight: bold; font-size: 0.9rem; }
-
-        .btn-logout {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .btn-logout:hover { background: #c0392b; }
 
         /* Main Viewport */
-        .main-container {
-            flex: 1; /* ให้ iframe กินพื้นที่ที่เหลือจาก Header ทั้งหมด */
-            position: relative;
-            background: #000;
-        }
-
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        .main-container { flex: 1; position: relative; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="brand">HUB</div>
-        
         <div class="nav-menu" id="menuContainer">
             </div>
-
-        <div class="user-section">
-            <span class="user-name" id="displayUser">User</span>
-            <button class="btn-logout" onclick="logout()">Logout</button>
-        </div>
     </div>
 
     <div class="main-container">
@@ -137,12 +71,10 @@
     <script src="menu_config.js"></script>
 
     <script>
-        // ตรวจสอบ Login
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         if (!currentUser) {
             window.location.href = 'index.html';
         } else {
-            document.getElementById('displayUser').innerText = `👤 ${currentUser.username}`;
             generateMenu();
         }
 
@@ -151,12 +83,36 @@
             const allowedPerms = currentUser.permissions || [];
             let firstAllowedUrl = '';
 
-            // วนลูปเมนูที่มีทั้งหมดจาก menu_config.js
+            // วนตามลำดับใน menu_config.js (Admin Panel และ User View จะอยู่ท้ายตามที่คุณเรียงไว้)
             appConfig.menus.forEach(menu => {
-                // แสดงเมนูถ้า User มีสิทธิ์ หรือเป็น Admin/Superadmin
-                if (allowedPerms.includes(menu.id) || currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+                const isAdmin = currentUser.role === 'admin' || currentUser.role === 'superadmin';
+                const hasPermission = allowedPerms.includes(menu.id);
+
+                // เงื่อนไขการแสดงผล:
+                // 1. ถ้าเมนูเป็น adminOnly: true ต้องเป็น Admin เท่านั้นถึงจะเห็น
+                // 2. ถ้าไม่ใช่ adminOnly: ต้องมี Permission หรือเป็น Admin
+                let canSee = false;
+                if (menu.adminOnly) {
+                    if (isAdmin) canSee = true;
+                } else {
+                    if (hasPermission || isAdmin) canSee = true;
+                }
+
+                if (canSee) {
                     const btn = document.createElement('div');
                     btn.className = 'nav-item';
+                    
+                    // ปรับแต่งสีปุ่มพิเศษสำหรับ Admin Panel
+                    if (menu.id === 'manage_users') {
+                        btn.style.borderColor = '#f1c40f';
+                        btn.style.color = '#f1c40f';
+                    }
+                    // ปรับแต่งสีปุ่มพิเศษสำหรับ User Panel
+                    if (menu.id === 'users') {
+                        btn.style.borderColor = '#2ecc71';
+                        btn.style.color = '#2ecc71';
+                    }
+
                     btn.innerText = menu.name;
                     btn.onclick = () => loadPage(menu.url, btn);
                     menuContainer.appendChild(btn);
@@ -164,19 +120,6 @@
                     if (!firstAllowedUrl) firstAllowedUrl = menu.url;
                 }
             });
-
-            // ถ้าเป็น Admin ให้เพิ่มปุ่ม Admin Panel ท้ายสุด
-            if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
-                const adminBtn = document.createElement('div');
-                adminBtn.className = 'nav-item';
-                adminBtn.style.borderColor = '#f1c40f';
-                adminBtn.style.color = '#f1c40f';
-                adminBtn.innerText = '⚙️ Admin Panel';
-                adminBtn.onclick = () => loadPage('admin-view.html', adminBtn);
-                menuContainer.appendChild(adminBtn);
-                
-                if (!firstAllowedUrl) firstAllowedUrl = 'admin-view.html';
-            }
 
             // โหลดหน้าแรกอัตโนมัติ
             if (firstAllowedUrl) {
@@ -187,14 +130,8 @@
 
         function loadPage(url, el) {
             document.getElementById('mainFrame').src = url;
-            // สลับสถานะปุ่ม Active
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             if (el) el.classList.add('active');
-        }
-
-        function logout() {
-            sessionStorage.clear();
-            window.location.href = 'index.html';
         }
     </script>
 </body>

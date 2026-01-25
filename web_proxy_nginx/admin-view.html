@@ -2,79 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Web Containers Chain - Admin</title>
+    <title>Admin - Web Containers Chain</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* --- 🌌 BASIC STYLE --- */
-        body, html { height: 100%; margin: 0; padding: 0; background-color: #000; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; color: white; }
+        body, html { height: 100%; margin: 0; padding: 0; background-color: #000; font-family: 'Segoe UI', sans-serif; color: white; }
         .stars-small { width: 1px; height: 1px; background: transparent; position: absolute; box-shadow: 10vw 10vh #FFF, 50vw 50vh #FFF; opacity: 0.8; animation: starTwinkle 5s infinite alternate; }
         @keyframes starTwinkle { from { opacity: 0.3; } to { opacity: 1; } }
 
-        .header-bar { position: absolute; top: 20px; right: 40px; z-index: 100; display: flex; gap: 15px; align-items: center; background: rgba(0, 0, 0, 0.5); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        .user-info { color: #00d2ff; font-weight: bold; }
-        h1.main-title { color: #ffffff; font-size: 3em; font-weight: 300; text-align: center; margin-top: 100px; margin-bottom: 40px; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+        /* --- Header ใหม่ ประหยัดพื้นที่ --- */
+        .admin-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 30px; background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 20px;
+        }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .logout-btn { background: transparent; color: #ff4757; border: 1px solid #ff4757; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .logout-btn:hover { background: #ff4757; color: white; }
 
-        .admin-container { max-width: 1100px; margin: 0 auto; padding: 20px; position: relative; z-index: 20; display: none; }
+        .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 20; }
         .glass-box { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 25px; margin-bottom: 30px; }
-        h2 { color: #00d2ff; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        h2 { color: #00d2ff; margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1.5em; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #ddd; table-layout: fixed; }
-        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; vertical-align: middle; overflow: hidden; text-overflow: ellipsis; }
-        th { background-color: rgba(0, 210, 255, 0.1); color: #00d2ff; text-transform: uppercase; font-size: 0.9em; }
-        tr:nth-child(even) { background-color: rgba(255,255,255,0.02); }
-
-        .col-username { width: 15%; } .col-role { width: 12%; } .col-group { width: 58%; } .col-action { width: 15%; text-align: center; } 
+        .header-actions { display: flex; gap: 10px; align-items: center; }
         
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: bold; font-size: 0.85em; }
-        .btn:hover { transform: translateY(-2px); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #ddd; }
+        th, td { border: 1px solid rgba(255,255,255,0.1); padding: 12px; text-align: left; }
+        th { background-color: rgba(0, 210, 255, 0.1); color: #00d2ff; font-weight: 600; }
+
+        .btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .btn-success { background: #2ecc71; color: #000; }
         .btn-danger { background: #e74c3c; color: white; }
-        .btn-warning { background: #f1c40f; color: #000; }
         .btn-info { background: #3498db; color: white; }
+        .btn-warning { background: #f1c40f; color: #000; }
 
-        .role-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; color: #000; font-weight: bold; cursor: pointer; }
-        .status-pending { background: #f1c40f; } .status-user { background: #2ecc71; } .status-admin { background: #9b59b6; color: white; } .status-superadmin { background: #e74c3c; color: white; }
+        .role-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.8em; color: #000; font-weight: bold; cursor: pointer; display: inline-block; }
+        .status-pending { background: #f1c40f; } 
+        .status-user { background: #2ecc71; } 
+        .status-admin { background: #9b59b6; color: white; } 
+        .status-superadmin { background: #e74c3c; color: white; }
 
-        .toggle-btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: #aaa; padding: 5px 10px; margin: 3px; border-radius: 4px; cursor: pointer; font-size: 0.75em; display: inline-block; transition: 0.3s; }
-        .toggle-btn.group-active { background: #2ecc71 !important; color: #000 !important; border-color: #2ecc71 !important; font-weight: bold; box-shadow: 0 0 8px rgba(46, 204, 113, 0.4); }
+        .toggle-btn { border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); color: #aaa; padding: 5px 10px; margin: 3px; border-radius: 4px; cursor: pointer; font-size: 0.75em; transition: 0.3s; }
+        .group-active { background: #2ecc71 !important; color: #000 !important; }
+        .perm-active { background: #3498db !important; color: #fff !important; }
+        .perm-inherited { background: rgba(52, 152, 219, 0.2) !important; color: #3498db !important; border: 1px dashed #3498db !important; }
+
+        .perm-wrapper { margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+        .section-label { font-size: 0.7em; color: #00d2ff; text-transform: uppercase; display: block; margin-bottom: 5px; font-weight: bold; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; display: none; justify-content: center; align-items: center; }
+        .modal-box { background: #1a1a1a; padding: 30px; border-radius: 12px; width: 350px; border: 1px solid #333; }
+        .modal-box input, .modal-box select { width: 100%; padding: 10px; margin-bottom: 15px; background: #333; border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; }
         
-        /* สิทธิ์ที่ตั้งให้เองรายบุคคล (Manual) */
-        .toggle-btn.perm-active { background: #3498db !important; color: #fff !important; border-color: #3498db !important; font-weight: bold; box-shadow: 0 0 8px rgba(52, 152, 219, 0.4); }
-        
-        /* สิทธิ์ที่ได้มาจาก Group (Inherited) */
-        .toggle-btn.perm-inherited { background: rgba(52, 152, 219, 0.25) !important; color: #fff !important; border: 1px dashed #3498db !important; opacity: 0.9; }
-
-        .section-label { font-size: 0.7em; color: #00d2ff; text-transform: uppercase; margin-bottom: 5px; display: block; opacity: 0.7; }
-        .perm-wrapper { margin-bottom: 12px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; display: none; justify-content: center; align-items: center; }
-        .modal-box { background: #1a1a1a; border: 1px solid #333; padding: 30px; border-radius: 10px; width: 350px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #aaa; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; background: #333; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        #csvInput { display: none; }
     </style>
 </head>
 <body>
     <div class="stars-small"></div>
-    <div class="header-bar" id="headerBar" style="display:none;">
-        <span class="user-info" id="displayUsername"></span>
-        <button class="btn btn-warning" onclick="openChangePwdModal()">🔑 Password</button>
-        <button class="btn btn-danger" onclick="logout()">Logout</button>
+    
+    <div class="admin-header">
+        <div style="font-weight: bold; color: #00d2ff;">ADMIN PANEL</div>
+        <div class="user-info">
+            <span id="currentAdminName">Admin</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
-    <h1 class="main-title">web containers chain</h1>
-
-    <div id="adminPanel" class="admin-container">
+    <div class="admin-container">
         <div class="glass-box">
-            <h2>👤 User Management <div><button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button></div></h2>
-            <table id="userTable">
+            <h2>
+                👤 User Management 
+                <div class="header-actions">
+                    <button class="btn btn-info" onclick="downloadCSVFormat()">📥 CSV Format</button>
+                    <button class="btn btn-warning" onclick="document.getElementById('csvInput').click()">📤 Import CSV</button>
+                    <input type="file" id="csvInput" accept=".csv" onchange="handleCSV(this)">
+                    <button class="btn btn-success" onclick="openAddUserModal()">➕ Add User</button>
+                </div>
+            </h2>
+            <table>
                 <thead>
                     <tr>
-                        <th class="col-username">Username</th>
-                        <th class="col-role">Role</th>
-                        <th class="col-group">Groups & Individual Permissions</th>
-                        <th class="col-action">Action</th>
+                        <th style="width:15%">Username</th>
+                        <th style="width:12%">Role/Status</th>
+                        <th>Groups & Individual Permissions</th>
+                        <th style="width:12%">Action</th>
                     </tr>
                 </thead>
                 <tbody id="userTableBody"></tbody>
@@ -82,17 +92,41 @@
         </div>
 
         <div class="glass-box">
-            <h2>🏢 Group Management <div><input type="text" id="newGroupName" style="background:rgba(0,0,0,0.3); border:1px solid #555; color:white; padding:8px; border-radius:4px;" placeholder="Group Name"><button onclick="createGroup()" class="btn btn-success" style="margin-left:5px;">+ Create</button></div></h2>
-            <table id="groupTable">
-                <thead><tr><th>Group Name</th><th>Shared Permissions (Menus)</th><th class="col-action">Action</th></tr></thead>
+            <h2>🏢 Group Management <div>
+                <input type="text" id="newGroupName" style="background:#333; border:1px solid #555; color:white; padding:8px; border-radius:4px; width:150px;" placeholder="Group Name">
+                <button onclick="createGroup()" class="btn btn-success">+ Create</button>
+            </div></h2>
+            <table>
+                <thead><tr><th style="width:20%">Group Name</th><th>Shared Permissions</th><th style="width:12%">Action</th></tr></thead>
                 <tbody id="groupTableBody"></tbody>
             </table>
         </div>
     </div>
 
-    <div id="addUserModal" class="modal-overlay"><div class="modal-box"><h3>Add New User</h3><div class="form-group"><label>Username</label><input type="text" id="modalUsername"></div><div class="form-group"><label>Password</label><input type="password" id="modalPassword"></div><div class="form-group"><label>Initial Group</label><select id="modalGroupSelect"></select></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('addUserModal')">Cancel</button><button class="btn btn-success" onclick="confirmAddUser()">Create</button></div></div></div>
-    <div id="changePwdModal" class="modal-overlay"><div class="modal-box"><h3>Change Password</h3><div class="form-group"><label>Old Password</label><input type="password" id="oldPwd"></div><div class="form-group"><label>New Password</label><input type="password" id="newPwd"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('changePwdModal')">Cancel</button><button class="btn btn-success" onclick="confirmChangePwd()">Update</button></div></div></div>
-    <div id="resetPwdModal" class="modal-overlay"><div class="modal-box"><h3>Reset User Password</h3><p id="resetTargetUser" style="color:#00d2ff; font-weight:bold;"></p><div class="form-group"><input type="text" id="adminNewPwd" placeholder="Enter New Password"></div><div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('resetPwdModal')">Cancel</button><button class="btn btn-success" onclick="confirmResetPwd()">Reset Now</button></div></div></div>
+    <div id="addUserModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Add New User</h3>
+            <input type="text" id="modalUsername" placeholder="Username">
+            <input type="password" id="modalPassword" placeholder="Password">
+            <select id="modalGroupSelect"></select>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn" style="background:#444;" onclick="closeModal('addUserModal')">Cancel</button>
+                <button class="btn btn-success" onclick="confirmAddUser()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resetPwdModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Reset Password</h3>
+            <p id="resetTargetUser" style="color:#00d2ff"></p>
+            <input type="text" id="adminNewPwd" placeholder="New Password">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn" style="background:#444;" onclick="closeModal('resetPwdModal')">Cancel</button>
+                <button class="btn btn-success" onclick="confirmResetPwd()">Reset</button>
+            </div>
+        </div>
+    </div>
 
     <script src="menu_config.js"></script>
     <script>
@@ -100,159 +134,173 @@
         if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'superadmin')) {
             window.top.location.href = 'index.html';
         } else {
-            document.getElementById('headerBar').style.display = 'flex';
-            document.getElementById('displayUsername').innerText = `👤 ${currentUser.username}`;
-            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('currentAdminName').innerText = `👤 ${currentUser.username}`;
             loadData();
         }
 
         let allUsers = [], allGroups = [], targetUserForReset = null;
 
         async function loadData() {
-            try {
-                const [u, g] = await Promise.all([
-                    fetch('/api/users?t='+Date.now()), 
-                    fetch('/api/groups?t='+Date.now())
-                ]);
-                allUsers = await u.json();
-                allGroups = await g.json();
-                renderUserTable();
-                renderGroupTable();
-            } catch (e) { console.error(e); }
+            const [u, g] = await Promise.all([fetch('/api/users'), fetch('/api/groups')]);
+            allUsers = await u.json(); allGroups = await g.json();
+            renderUserTable(); renderGroupTable();
         }
 
+        // --- CSV Logic (ปรับปรุงให้รองรับ Column 3=webtop1, 4=webtop2) ---
+        function downloadCSVFormat() {
+            const csvContent = "username,password,perm1,perm2\nuser01,1234,webtop1,webtop2";
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "user_import_format.csv");
+            link.click();
+        }
+
+        async function handleCSV(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const rows = e.target.result.split('\n').filter(r => r.trim() !== '');
+                let count = 0;
+                for (let i = 1; i < rows.length; i++) {
+                    const cols = rows[i].split(',').map(c => c.trim());
+                    if (cols.length < 2) continue;
+                    
+                    const username = cols[0];
+                    const password = cols[1];
+                    // ดึงค่า ID ตั้งแต่ column index 2 เป็นต้นไป (webtop1, webtop2...)
+                    const permissions = cols.slice(2).filter(p => p !== '');
+                    
+                    // ส่งเข้า API update-user หรือ create-user ตามความต้องการ
+                    // ในที่นี้ใช้ create-user เพื่อสร้าง user ใหม่พร้อมสิทธิ์ทันที
+                    const success = await apiPost('/api/create-user', { 
+                        username, password, permissions, status: 'approved' 
+                    });
+                    if (success) count++;
+                }
+                alert(`Imported ${count} users successfully.`);
+                input.value = '';
+                loadData();
+            };
+            reader.readAsText(file);
+        }
+
+        // --- User Rendering (รักษา Logic เดิม) ---
         function renderUserTable() {
-            const tb = document.getElementById('userTableBody'); 
-            tb.innerHTML = '';
-            
+            const tb = document.getElementById('userTableBody'); tb.innerHTML = '';
             allUsers.forEach(user => {
                 const tr = document.createElement('tr');
                 let displayRole = user.role === 'admin' ? 'admin' : (user.role === 'superadmin' ? 'superadmin' : (user.status === 'approved' ? 'user' : 'pending'));
                 
-                let uGroups = Array.isArray(user.groups) ? user.groups : [];
-                let uIndividualPerms = Array.isArray(user.permissions) ? user.permissions : [];
-
-                // หา Shared Permissions จาก Group
-                let inheritedPerms = [];
+                let uGroups = user.groups || [], uPerms = user.permissions || [];
+                let inherited = [];
                 uGroups.forEach(gn => {
                     const g = allGroups.find(x => x.name === gn);
-                    if (g && g.permissions) inheritedPerms = [...new Set([...inheritedPerms, ...g.permissions])];
+                    if (g) inherited = [...new Set([...inherited, ...(g.permissions || [])])];
                 });
 
-                // 1. Groups Section
-                let groupsHtml = `<div class="perm-wrapper"><span class="section-label">Groups Membership</span>`;
+                let html = `<div class="perm-wrapper"><span class="section-label">Groups</span>`;
                 allGroups.forEach(g => {
                     const active = uGroups.includes(g.name);
-                    groupsHtml += `<button class="toggle-btn ${active ? 'group-active' : ''}" onclick="toggleUserGroup('${user.username}','${g.name}')">👥 ${g.name}</button> `;
+                    html += `<button class="toggle-btn ${active ? 'group-active' : ''}" onclick="toggleUserGroup('${user.username}','${g.name}')">👥 ${g.name}</button> `;
                 });
-                groupsHtml += `</div>`;
-
-                // 2. Individual Permissions Section
-                groupsHtml += `<div class="perm-wrapper"><span class="section-label">Individual Permissions</span>`;
+                html += `</div><div class="perm-wrapper"><span class="section-label">Individual</span>`;
                 appConfig.menus.forEach(m => {
-                    const isManual = uIndividualPerms.includes(m.id);
-                    const isInherited = inheritedPerms.includes(m.id);
+                    if (m.id === 'manage_users' || m.id === 'users') return;
+                    const isManual = uPerms.includes(m.id);
+                    const isInherited = inherited.includes(m.id);
                     let btnClass = isManual ? 'perm-active' : (isInherited ? 'perm-inherited' : '');
-
-                    groupsHtml += `<button class="toggle-btn ${btnClass}" onclick="toggleUserIndividualPerm('${user.username}','${m.id}')" title="${isInherited ? 'Auto from Group' : ''}">${m.name}</button> `;
+                    html += `<button class="toggle-btn ${btnClass}" onclick="toggleUserIndividualPerm('${user.username}','${m.id}')">${m.name}</button> `;
                 });
-                groupsHtml += `</div>`;
+                html += `</div>`;
 
                 tr.innerHTML = `
-                    <td>${user.username}</td>
+                    <td><b>${user.username}</b></td>
                     <td><span class="role-badge status-${displayRole}" onclick="cycleUserRole('${user.username}')">${displayRole.toUpperCase()}</span></td>
-                    <td style="white-space:normal;">${groupsHtml}</td>
-                    <td class="col-action">
-                        ${(user.role!=='superadmin' && user.username!==currentUser.username) ? 
-                        `<button class="btn btn-danger" onclick="deleteUser('${user.username}')">Del</button>
-                         ${currentUser.role==='superadmin' ? `<button class="btn btn-info" onclick="openResetPwd('${user.username}')">🔑</button>`:''}` 
-                        : ''}
+                    <td>${html}</td>
+                    <td>
+                        <button class="btn btn-info" onclick="openResetPwd('${user.username}')">🔑</button>
+                        ${(user.role!=='superadmin' && user.username!==currentUser.username) ? `<button class="btn btn-danger" onclick="deleteUser('${user.username}')">Del</button>` : ''}
                     </td>`;
                 tb.appendChild(tr);
             });
         }
 
-        async function cycleUserRole(username) {
-            const targetUser = allUsers.find(u => u.username === username);
-            if (!targetUser || targetUser.role === 'superadmin') return;
+        // --- Data Logic (ตามไฟล์เดิมที่คุณส่งมา) ---
+        async function apiPost(url, data) {
+            const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)});
+            return (await res.json()).success;
+        }
 
-            let newRole = 'user', newStatus = 'approved';
+        async function cycleUserRole(username) {
+            const target = allUsers.find(u => u.username === username);
+            if (!target || target.role === 'superadmin') return;
+            let nRole = 'user', nStatus = 'approved';
             if (currentUser.role === 'superadmin') {
-                if (targetUser.status === 'pending') { newRole = 'user'; newStatus = 'approved'; }
-                else if (targetUser.role === 'user') { newRole = 'admin'; newStatus = 'approved'; }
-                else if (targetUser.role === 'admin') { newRole = 'user'; newStatus = 'pending'; }
-            } else if (currentUser.role === 'admin') {
-                if (targetUser.status === 'pending') { newRole = 'user'; newStatus = 'approved'; }
-                else { newRole = 'user'; newStatus = 'pending'; }
+                if (target.status === 'pending') { nRole = 'user'; nStatus = 'approved'; }
+                else if (target.role === 'user') { nRole = 'admin'; nStatus = 'approved'; }
+                else { nRole = 'user'; nStatus = 'pending'; }
+            } else {
+                nStatus = target.status === 'pending' ? 'approved' : 'pending';
             }
-            if (await apiPost('/api/update-user', { username, role: newRole, status: newStatus })) loadData();
+            if (await apiPost('/api/update-user', { username, role: nRole, status: nStatus })) loadData();
         }
 
         async function toggleUserIndividualPerm(username, menuId) {
             const user = allUsers.find(u => u.username === username);
-            let perms = Array.isArray(user.permissions) ? [...user.permissions] : [];
-            if(perms.includes(menuId)) perms = perms.filter(p=>p!==menuId); else perms.push(menuId);
+            let perms = [...(user.permissions || [])];
+            perms = perms.includes(menuId) ? perms.filter(p=>p!==menuId) : [...perms, menuId];
             if(await apiPost('/api/update-user', { username, permissions: perms })) loadData();
         }
 
         async function toggleUserGroup(username, groupName) {
             const user = allUsers.find(u => u.username === username);
-            let grps = Array.isArray(user.groups) ? [...user.groups] : [];
-            if(grps.includes(groupName)) grps = grps.filter(g=>g!==groupName); else grps.push(groupName);
+            let grps = [...(user.groups || [])];
+            grps = grps.includes(groupName) ? grps.filter(g=>g!==groupName) : [...grps, groupName];
             if(await apiPost('/api/update-user', { username, groups: grps })) loadData();
         }
 
-        // --- Shared Helpers ---
         function renderGroupTable() {
             const tb = document.getElementById('groupTableBody'); tb.innerHTML = '';
             allGroups.forEach(g => {
-                let permHtml = '';
-                appConfig.menus.forEach(m => {
+                let p = ''; appConfig.menus.forEach(m => {
+                    if (m.id === 'manage_users' || m.id === 'users') return;
                     const active = (g.permissions || []).includes(m.id);
-                    permHtml += `<button class="toggle-btn ${active ? 'perm-active' : ''}" onclick="toggleGroupPerm('${g.name}','${m.id}')">${m.name}</button> `;
+                    p += `<button class="toggle-btn ${active ? 'perm-active' : ''}" onclick="toggleGroupPerm('${g.name}','${m.id}')">${m.name}</button> `;
                 });
-                tb.innerHTML += `<tr><td><b>👥 ${g.name}</b></td><td style="white-space:normal;">${permHtml}</td><td class="col-action"><button class="btn btn-danger" onclick="deleteGroup('${g.name}')">Del</button></td></tr>`;
+                tb.innerHTML += `<tr><td><b>${g.name}</b></td><td>${p}</td><td><button class="btn btn-danger" onclick="deleteGroup('${g.name}')">Del</button></td></tr>`;
             });
         }
-        async function toggleGroupPerm(gName, mId) {
-            const g = allGroups.find(x=>x.name===gName);
+
+        async function toggleGroupPerm(name, mId) {
+            const g = allGroups.find(x=>x.name===name);
             let p = [...(g.permissions||[])];
-            if(p.includes(mId)) p = p.filter(x=>x!==mId); else p.push(mId);
-            if(await apiPost('/api/update-group', { name: gName, permissions: p })) loadData();
+            p = p.includes(mId) ? p.filter(x=>x!==mId) : [...p, mId];
+            if(await apiPost('/api/update-group', { name, permissions: p })) loadData();
         }
-        async function apiPost(url, data) {
-            const res = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data)});
-            const json = await res.json();
-            if(!json.success) { alert(json.message || "Error"); return false; }
-            return true;
-        }
-        async function createGroup() {
-            const name = document.getElementById('newGroupName').value;
-            if(name && await apiPost('/api/create-group', { name })) { document.getElementById('newGroupName').value=''; loadData(); }
-        }
-        async function confirmAddUser() {
-            const u = document.getElementById('modalUsername').value, p = document.getElementById('modalPassword').value, g = document.getElementById('modalGroupSelect').value;
-            if(u && p && await apiPost('/api/create-user', { username: u, password: p, group: g })) { closeModal('addUserModal'); loadData(); }
-        }
-        async function deleteUser(username) { if(confirm('Delete user?')) { if(await apiPost('/api/delete-user', { username })) loadData(); } }
-        async function deleteGroup(name) { if(confirm('Delete group?')) { if(await apiPost('/api/delete-group', { name })) loadData(); } }
+
+        async function createGroup() { const name = document.getElementById('newGroupName').value; if(name && await apiPost('/api/create-group', { name })) { document.getElementById('newGroupName').value=''; loadData(); } }
+        async function deleteUser(u) { if(confirm('Del?')) if(await apiPost('/api/delete-user', { username:u })) loadData(); }
+        async function deleteGroup(n) { if(confirm('Del?')) if(await apiPost('/api/delete-group', { name:n })) loadData(); }
+        
         function openAddUserModal() { 
-            const sel = document.getElementById('modalGroupSelect'); sel.innerHTML='<option value="">-- None --</option>';
-            allGroups.forEach(g=>sel.innerHTML+=`<option value="${g.name}">${g.name}</option>`);
+            const sel = document.getElementById('modalGroupSelect'); sel.innerHTML = '<option value="">-- No Group --</option>';
+            allGroups.forEach(g => sel.innerHTML += `<option value="${g.name}">${g.name}</option>`);
             document.getElementById('addUserModal').style.display='flex'; 
         }
-        function openChangePwdModal() { document.getElementById('changePwdModal').style.display='flex'; }
         function openResetPwd(u) { targetUserForReset=u; document.getElementById('resetTargetUser').innerText=u; document.getElementById('resetPwdModal').style.display='flex'; }
         function closeModal(id) { document.getElementById(id).style.display='none'; }
-        async function confirmChangePwd() { 
-            const oldP=document.getElementById('oldPwd').value, newP=document.getElementById('newPwd').value;
-            if(await apiPost('/api/change-password', {username:currentUser.username, oldPassword:oldP, newPassword:newP})) closeModal('changePwdModal');
+        function logout() { sessionStorage.clear(); window.top.location.href = 'index.html'; }
+        
+        async function confirmAddUser() {
+            const u = document.getElementById('modalUsername').value, p = document.getElementById('modalPassword').value, g = document.getElementById('modalGroupSelect').value;
+            if(u && p && await apiPost('/api/create-user', { username: u, password: p, groups: g ? [g] : [], status: 'approved' })) { closeModal('addUserModal'); loadData(); }
         }
         async function confirmResetPwd() {
-            const newP=document.getElementById('adminNewPwd').value;
-            if(await apiPost('/api/admin-reset-password', {targetUsername:targetUserForReset, newPassword:newP})) closeModal('resetPwdModal');
+            const p = document.getElementById('adminNewPwd').value;
+            if(await apiPost('/api/admin-reset-password', {targetUsername: targetUserForReset, newPassword: p})) { alert('Done'); closeModal('resetPwdModal'); }
         }
-        function logout() { sessionStorage.clear(); window.top.location.href='index.html'; }
     </script>
 </body>
 </html>

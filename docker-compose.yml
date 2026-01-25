@@ -46,7 +46,9 @@ services:
  
 
   webtop1:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    build: 
+      context: .
+      dockerfile: dockerfile.webtop    
     container_name: webtop1
     security_opt:
       - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์

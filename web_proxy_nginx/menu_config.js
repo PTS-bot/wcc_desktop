@@ -37,6 +37,13 @@ const appConfig = {
             icon: 'fas fa-users-cog', 
             url: 'admin-view.html',   
             adminOnly: true 
-        }       
+        },
+                { 
+            id: 'users',       
+            name: 'User Panel', 
+            icon: 'fas fa-users-cog', 
+            url: 'user-view.html',   
+            adminOnly: false 
+        },        
     ]
 };
