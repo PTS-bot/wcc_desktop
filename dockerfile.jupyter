@@ -1,0 +1,24 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# --- 🟢 กำหนดตัวแปรที่นี่ (เปลี่ยนค่าได้ตามใจชอบ) ---
+# ENV JUPYTER_TOKEN="mysecretpassword"
+# ENV JUPYTER_WORKDIR="/home/myproject"
+
+# สร้างโฟลเดอร์สำหรับทำงาน (ตามตัวแปรที่ตั้งไว้)
+# WORKDIR ${JUPYTER_WORKDIR}
+
+# Copy ไฟล์
+COPY requirements_python.txt .
+COPY requirements_java.txt .
+COPY install_jupyter.sh /usr/local/bin/install_jupyter.sh
+
+# รัน Script (Script จะดึงค่า ENV ข้างบนไปใช้เอง)
+RUN chmod +x /usr/local/bin/install_jupyter.sh && \
+    /usr/local/bin/install_jupyter.sh
+
+EXPOSE 8888
+
+# ใช้ Config ที่ Script สร้างไว้
+CMD ["jupyter", "lab", "--allow-root", "--config=/root/.jupyter/jupyter_lab_config.py"]

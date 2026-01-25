@@ -1,0 +1,29 @@
+# Dockerfile.gateway
+FROM ubuntu:22.04
+
+# ป้องกันการถามคำถามตอนติดตั้ง package
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1. Copy Script ติดตั้งเข้าไปก่อน (ยังไม่ Copy Config)
+COPY install_nginx.sh /install_nginx.sh
+# COPY install_node.sh /install_node.sh
+
+# 2. รัน Script ติดตั้ง Nginx ให้เสร็จก่อน!
+# ตอนนี้มันจะลง Config เดิมๆ ของโรงงานไปก่อน ซึ่งจะไม่ Error
+RUN chmod +x /install_nginx.sh && \
+    /install_nginx.sh
+
+# RUN chmod +x /install_node.sh && \
+#     /install_node.sh
+
+# 3. Copy ไฟล์ Dashboard เข้าไป
+COPY web_proxy_nginx /var/www/dashboard
+
+# 4. *** Copy Config ของเราไป "ทับ" ของโรงงานในขั้นตอนนี้ ***
+# (ย้ายมาไว้หลังสุด)
+COPY web_proxy_nginx/nginx.conf /etc/nginx/nginx.conf
+
+# สั่งรัน Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+EXPOSE 8080

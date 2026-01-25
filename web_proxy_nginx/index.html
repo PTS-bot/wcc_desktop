@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Web Containers Chain</title>
+    <style>
+        /* --- 🌌 Deep Space Theme (Dots) --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Star Effect (Consistent with other pages) */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            box-shadow: 174px 200px #FFF, 500px 100px #FFF, 800px 300px #FFF;
+            animation: twinkle 5s infinite alternate;
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            from {
+                opacity: 0.3;
+            }
+
+            to {
+                opacity: 0.8;
+            }
+        }
+
+        /* Glass Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            width: 320px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00d2ff;
+        }
+
+        h2 {
+            margin: 0 0 5px 0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        p {
+            color: #aaa;
+            font-size: 0.8em;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8em;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #444;
+            border-radius: 5px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #444;
+            color: #aaa;
+            margin-top: 15px;
+            font-size: 0.8em;
+        }
+
+        .btn-secondary:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .error {
+            color: #ff6b6b;
+            font-size: 0.85em;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success {
+            color: #2ecc71;
+            font-size: 0.85em;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .form-section {
+            display: none;
+            animation: fadein 0.5s;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="stars"></div>
+
+    <div class="login-card">
+        <div class="logo">⛓️</div>
+        <h2>Web Containers Chain</h2>
+        <p>Secure Orchestration Interface</p>
+
+        <div id="loginSection" class="form-section active">
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>ACCESS ID</label>
+                    <input type="text" id="loginUser" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <label>PASSCODE</label>
+                    <input type="password" id="loginPass" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Connect</button>
+                <div id="loginError" class="error"></div>
+            </form>
+            <button onclick="toggleForm('register')" class="btn btn-secondary">Register New User</button>
+        </div>
+
+        <div id="registerSection" class="form-section">
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>NEW USERNAME</label>
+                    <input type="text" id="regUser" placeholder="Create Username" required>
+                </div>
+                <div class="input-group">
+                    <label>NEW PASSWORD</label>
+                    <input type="password" id="regPass" placeholder="Create Password" required>
+                </div>
+                <div class="input-group">
+                    <label>CONFIRM PASSWORD</label>
+                    <input type="password" id="regConfirm" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary"
+                    style="background: linear-gradient(45deg, #11998e, #38ef7d);">Register</button>
+                <div id="regError" class="error"></div>
+                <div id="regSuccess" class="success">Registration Complete!</div>
+            </form>
+            <button onclick="toggleForm('login')" class="btn btn-secondary">Back to Login</button>
+        </div>
+    </div>
+
+    <script>
+        // Check Login
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'home.html';
+        }
+
+        function toggleForm(mode) {
+            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(mode + 'Section').classList.add('active');
+            document.querySelectorAll('.error, .success').forEach(el => el.style.display = 'none');
+        }
+
+        // --- 1. LOGIN (API Connect) ---
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPass').value;
+            const errorMsg = document.getElementById('loginError');
+
+            errorMsg.style.display = 'none';
+
+            try {
+                // ✅ ใช้ API จริง
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (data.user.status === 'pending') {
+                        errorMsg.innerText = "Account is waiting for Admin approval.";
+                        errorMsg.style.display = 'block';
+                    } else {
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        sessionStorage.setItem('currentUser', JSON.stringify(data.user));
+                        window.location.href = 'home.html';
+                    }
+                } else {
+                    errorMsg.innerText = data.message || "Invalid credentials";
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+                errorMsg.innerText = "Connection Error: Cannot reach server";
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        // --- 2. REGISTER (API Connect) ---
+        // --- REGISTER (API Connect) ---
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const user = document.getElementById('regUser').value;
+            const pass = document.getElementById('regPass').value;
+            const confirm = document.getElementById('regConfirm').value;
+            const errorMsg = document.getElementById('regError');
+            const successMsg = document.getElementById('regSuccess');
+
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if (pass !== confirm) {
+                errorMsg.innerText = "Passwords do not match!";
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/register', { // ✅ ตรวจสอบ Path นี้ให้ตรงกับ Server
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    successMsg.innerText = "Registration Complete! Waiting for Admin approval.";
+                    successMsg.style.display = 'block';
+                    document.getElementById('registerForm').reset();
+                    // หน่วงเวลา 2 วินาทีแล้วกลับไปหน้า Login
+                    setTimeout(() => { toggleForm('login'); }, 2000);
+                } else {
+                    errorMsg.innerText = data.message || "Registration failed";
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Connection Error: Cannot reach server";
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

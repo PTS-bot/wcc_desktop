@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connection Lost</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        h1.error-code {
+            font-size: 6em;
+            font-weight: bold;
+            margin: 0;
+            color: #ff4444; /* สีแดงแจ้งเตือน */
+            text-shadow: 0 0 20px rgba(255, 68, 68, 0.6);
+            animation: glitch 1s infinite;
+        }
+
+        h2.message {
+            font-size: 2em;
+            margin-top: 10px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        p.detail {
+            color: #aaa;
+            margin-top: 10px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .btn-home {
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animation Glitch แบบ Error */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        /* --- ดวงดาว (เหมือนเดิม) --- */
+        .stars-small {
+            width: 1px; height: 1px; background: transparent;
+            position: absolute; top: 0; left: 0; z-index: 1;
+            box-shadow: 10vw 10vh #FFF, 20vw 80vh #FFF, 80vw 10vh #FFF, 90vw 50vh #FFF, 50vw 50vh #FFF,
+                        15vw 25vh #FFF, 35vw 75vh #FFF, 65vw 15vh #FFF, 85vw 85vh #FFF, 45vw 35vh #FFF,
+                        12vw 92vh #FFF, 72vw 22vh #FFF, 32vw 42vh #FFF, 52vw 62vh #FFF, 92vw 12vh #FFF;
+            opacity: 0.8; animation: starTwinkle 5s infinite alternate;
+        }
+        .stars-medium {
+            width: 2px; height: 2px; background: transparent;
+            position: absolute; top: 0; left: 0; z-index: 2;
+            box-shadow: 25vw 15vh #FFF, 75vw 35vh #FFF, 15vw 65vh #FFF, 55vw 85vh #FFF, 85vw 20vh #FFF;
+            opacity: 0.6; animation: starTwinkle 7s infinite alternate-reverse;
+        }
+        @keyframes starTwinkle { from { opacity: 0.3; } to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="stars-small"></div>
+    <div class="stars-medium"></div>
+
+    <div class="container">
+        <h1 class="error-code">ERROR</h1>
+        <h2 class="message">Signal Lost</h2>
+        <p class="detail">
+            ไม่สามารถเชื่อมต่อกับ Container ปลายทางได้<br>
+            อาจเป็นเพราะกำลังเริ่มทำงาน (Starting) หรือระบบขัดข้อง
+        </p>
+        <a href="/" class="btn-home">Return to Base</a>
+    </div>
+
+</body>
+</html>

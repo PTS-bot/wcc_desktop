@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Containers Chain</title>
+    
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; background-color: #090a0f; }
+        
+        /* Header Bar */
+        .header {
+            background-color: #0f1219;
+            border-bottom: 1px solid #333;
+            color: white;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .brand { 
+            font-weight: bold; font-size: 1.1em; margin-right: 20px; 
+            letter-spacing: 1px; color: #00d2ff; white-space: nowrap;
+        }
+
+        /* Menu Buttons */
+        .nav-btn {
+            background: none; border: none; color: #7f8c8d; padding: 0 15px; height: 100%; cursor: pointer; font-size: 0.9em; transition: 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-btn:hover { color: white; background-color: #1a1d26; }
+        .nav-btn.active { color: white; border-bottom: 2px solid #00d2ff; background-color: #13151c; }
+
+        /* Browser Controls */
+        .browser-controls {
+            display: flex; gap: 5px; margin-right: 20px; padding-left: 20px; border-left: 1px solid #333; height: 30px; align-items: center;
+        }
+        .ctrl-btn {
+            background: #1e272e; border: 1px solid #333; color: #bdc3c7; width: 30px; height: 30px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .ctrl-btn:hover { background: #00d2ff; color: #000; border-color: #00d2ff; }
+
+        /* Right Group (Home & User) */
+        .right-group {
+            margin-left: auto; display: flex; align-items: center; gap: 10px;
+        }
+        .home-btn {
+            background: #34495e; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8em; transition: 0.3s;
+        }
+        .home-btn:hover { background: #2980b9; }
+        .home-btn.active { background: #3498db; box-shadow: 0 0 5px #3498db; }
+        .logout-btn {
+            background: #c0392b; color: white; border: none; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8em;
+        }
+        .logout-btn:hover { background: #e74c3c; }
+
+        /* Frame Container */
+        #framesContainer {
+            flex-grow: 1; position: relative; width: 100%; height: calc(100vh - 50px); background-color: #1b2735;
+        }
+        .app-frame { border: none; width: 100%; height: 100%; display: none; background: white; }
+        .app-frame.visible { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="brand">⛓️ Web Chain</div>
+        
+        <div class="browser-controls">
+            <button class="ctrl-btn" onclick="frameAction('back')" title="Back">⬅</button>
+            <button class="ctrl-btn" onclick="frameAction('forward')" title="Forward">➡</button>
+            <button class="ctrl-btn" onclick="frameAction('reload')" title="Refresh">↻</button>
+        </div>
+
+        <div id="menuContainer" style="display: flex; height: 100%;"></div>
+        
+        <div class="right-group">
+            <span id="userDisplay" style="color:#aaa; font-size:0.8em; margin-right:10px;"></span>
+            <button onclick="goHome()" id="btn-home" class="home-btn">🏠 HOME</button>
+            <button onclick="logout()" class="logout-btn">DISCONNECT</button>
+        </div>
+    </div>
+
+    <div id="framesContainer">
+        <iframe id="frame-home" class="app-frame" src="home.html"></iframe>
+    </div>
+
+    <script src="menu_config.js"></script>
+    <script>
+        // Get User Info
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser')) || { username: 'Guest', role: 'guest', permissions: [] };
+        document.getElementById('userDisplay').innerText = currentUser.username.toUpperCase();
+        
+        const isAdmin = currentUser.role === 'admin';
+        const userPerms = currentUser.permissions || [];
+
+        const menuContainer = document.getElementById('menuContainer');
+        const framesContainer = document.getElementById('framesContainer');
+        const frames = {};
+
+        // --- Functions ---
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function goHome() {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.app-frame').forEach(f => f.classList.remove('visible'));
+            
+            document.getElementById('frame-home').classList.add('visible');
+            document.getElementById('btn-home').classList.add('active');
+        }
+
+        function frameAction(action) {
+            const activeFrame = document.querySelector('.app-frame.visible');
+            if (activeFrame && activeFrame.contentWindow) {
+                try {
+                    if (action === 'back') activeFrame.contentWindow.history.back();
+                    if (action === 'forward') activeFrame.contentWindow.history.forward();
+                    if (action === 'reload') activeFrame.contentWindow.location.reload(); 
+                } catch(e) { console.warn(e); }
+            }
+        }
+
+        // --- Generate Menu ---
+        appConfig.menus.forEach((menu, index) => {
+            if(menu.name.toLowerCase() === 'home') return; // Skip Home
+
+            // 🔥 Permission Check Logic
+            if (!isAdmin && !userPerms.includes(menu.id)) {
+                return; // ถ้าไม่ใช่ Admin และไม่มีสิทธิ์ -> ไม่สร้างปุ่ม
+            }
+
+            const btn = document.createElement('button');
+            btn.className = 'nav-btn';
+            btn.innerText = menu.name.toUpperCase();
+            btn.id = `btn-${index}`;
+
+            const iframe = document.createElement('iframe');
+            iframe.className = 'app-frame';
+            iframe.id = `frame-${index}`;
+            
+            framesContainer.appendChild(iframe);
+            frames[index] = iframe;
+
+            btn.onclick = () => {
+                // Deactivate Home
+                document.getElementById('btn-home').classList.remove('active');
+                document.getElementById('frame-home').classList.remove('visible');
+
+                // Activate this menu
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.app-frame').forEach(f => f.classList.remove('visible'));
+                const selectedFrame = frames[index];
+                selectedFrame.classList.add('visible');
+                
+                // Lazy Load
+                if (!selectedFrame.getAttribute('src')) {
+                    selectedFrame.src = menu.url;
+                }
+            };
+            menuContainer.appendChild(btn);
+        });
+
+        // Start at Home
+        goHome(); 
+    </script>
+</body>
+</html>
