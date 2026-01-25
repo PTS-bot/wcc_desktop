@@ -59,9 +59,9 @@ services:
     # volumes:
     #   - ./work_space/web_desktop:/config # เก็บข้อมูล Home Directory ไว้ที่นี่เพื่อไม่ให้ข้อมูลหาย
       # - /var/run/docker.sock:/var/run/docker.sock # (Optional) เปิดบรรทัดนี้ถ้าอยากรัน Docker ซ้อนข้างใน
-    ports:
-      - 3100:3000 # พอร์ตสำหรับเข้าผ่าน HTTP
-      - 3101:3001 # พอร์ตสำหรับเข้าผ่าน HTTPS
+    # ports:
+    #   - 3100:3000 # พอร์ตสำหรับเข้าผ่าน HTTP
+    #   - 3101:3001 # พอร์ตสำหรับเข้าผ่าน HTTPS
     shm_size: "1gb" # สำคัญมาก! ต้องตั้งค่านี้ไม่งั้น Browser ใน Webtop จะแครชบ่อย
     restart: unless-stopped
 
@@ -87,4 +87,340 @@ services:
         - PGID=1000 # Group ID
         - TZ=Asia/Bangkok 
         - SUBFOLDER=/webtop3/ 
+      shm_size: "1gb" 
+
+  webtop4:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop4
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop4/ 
+      shm_size: "1gb" 
+
+  webtop5:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop5
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop5/ 
+      shm_size: "1gb" 
+
+  webtop6:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop6
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop6/ 
+      shm_size: "1gb" 
+
+  webtop7:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop7
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop7/ 
+      shm_size: "1gb" 
+
+
+  webtop8:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop8
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop8/ 
+      shm_size: "1gb" 
+
+  webtop9:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop9
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop9/ 
+      shm_size: "1gb" 
+
+
+  webtop10:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop10
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop10/ 
+      shm_size: "1gb" 
+
+# ----------- 10 ----------------------------------------------------------------------------------------------
+
+  webtop11:
+    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: webtop11
+    security_opt:
+      - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+    environment:
+      - PUID=1000 # User ID
+      - PGID=1000 # Group ID
+      - TZ=Asia/Bangkok # ตั้งเวลาเป็นไทย
+      - SUBFOLDER=/webtop11/ # (Optional) ถ้าใช้ Reverse Proxy
+    shm_size: "1gb" 
+    restart: unless-stopped
+
+  webtop12:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop12
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok
+        - SUBFOLDER=/webtop12/ 
+      shm_size: "1gb" 
+
+  webtop13:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop13
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop13/ 
+      shm_size: "1gb" 
+
+  webtop14:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop14
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop14/ 
+      shm_size: "1gb" 
+
+  webtop15:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop15
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop15/ 
+      shm_size: "1gb" 
+
+  webtop16:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop16
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop16/ 
+      shm_size: "1gb" 
+
+  webtop17:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop17
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop17/ 
+      shm_size: "1gb" 
+
+
+  webtop18:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop18
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop18/ 
+      shm_size: "1gb" 
+
+  webtop19:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop19
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop19/ 
+      shm_size: "1gb" 
+
+
+  webtop20:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop20
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop20/ 
+      shm_size: "1gb" 
+
+# ----------- 20 ----------------------------------------------------------------------------------------------
+
+  webtop21:
+    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: webtop21
+    security_opt:
+      - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+    environment:
+      - PUID=1000 # User ID
+      - PGID=1000 # Group ID
+      - TZ=Asia/Bangkok # ตั้งเวลาเป็นไทย
+      - SUBFOLDER=/webtop21/ # (Optional) ถ้าใช้ Reverse Proxy
+    shm_size: "1gb" 
+    restart: unless-stopped
+
+  webtop22:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop22
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok
+        - SUBFOLDER=/webtop22/ 
+      shm_size: "1gb" 
+
+  webtop23:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop23
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop23/ 
+      shm_size: "1gb" 
+
+  webtop24:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop24
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop24/ 
+      shm_size: "1gb" 
+
+  webtop25:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop25
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop25/ 
+      shm_size: "1gb" 
+
+  webtop26:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop26
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop26/ 
+      shm_size: "1gb" 
+
+  webtop27:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop27
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop27/ 
+      shm_size: "1gb" 
+
+
+  webtop28:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop28
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop28/ 
+      shm_size: "1gb" 
+
+  webtop29:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop29
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop29/ 
+      shm_size: "1gb" 
+
+
+  webtop30:
+      image: lscr.io/linuxserver/webtop:ubuntu-xfce
+      container_name: webtop30
+      security_opt:
+        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      environment:
+        - PUID=1000 # User ID
+        - PGID=1000 # Group ID
+        - TZ=Asia/Bangkok 
+        - SUBFOLDER=/webtop30/ 
       shm_size: "1gb" 
