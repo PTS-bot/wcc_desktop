@@ -25,6 +25,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    ports:
+      - "3000:3000"      
 
   mongo:
     image: mongo:latest
@@ -32,7 +34,9 @@ services:
     restart: always
     volumes:
       - ./web_proxy_mongo:/data/db
-
+    ports:
+      - "27017:27017"
+      
 # -------------------------------------------------------------------------------------------------------
 # Kali Linux Webtop Configuration (using Anchor to keep it clean)
 
