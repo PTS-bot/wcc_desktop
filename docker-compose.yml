@@ -13,7 +13,7 @@ services:
       - ./web_proxy_nginx:/usr/share/nginx/html # 👈 Map ไฟล์ HTML
       - ./web_proxy_nginx/nginx.conf:/etc/nginx/nginx.conf # 👈 Map Config Nginx
     ports:
-      - "8080:8080"
+      - "6688:8080"
     depends_on:
       - auth-service         
 
@@ -25,8 +25,8 @@ services:
       # ✅ ใช้ Volume เดียวกับ Nginx เลย เพื่อให้อ่านไฟล์ users.json ตัวเดียวกันได้
       - ./web_proxy_node:/app 
     command: sh -c "npm install express body-parser cors express-session mongoose && node server.js"
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     restart: always
     depends_on:
       - mongo # บอกให้รอ mongo รันก่อน (ระดับ network)
@@ -35,8 +35,8 @@ services:
     image: mongo:latest
     container_name: mongodb
     restart: always
-    ports:
-      - "27017:27017"
+    # ports:
+    #   - "27017:27017"
     volumes:
       - ./web_proxy_mongo:/data/db  # Map ข้อมูลออกมาข้างนอก กันข้อมูลหาย
 
@@ -87,4 +87,8 @@ services:
         - PGID=1000 # Group ID
         - TZ=Asia/Bangkok 
         - SUBFOLDER=/webtop3/ 
+<<<<<<< Updated upstream
       shm_size: "1gb" 
+=======
+      shm_size: "1gb" 
+>>>>>>> Stashed changes

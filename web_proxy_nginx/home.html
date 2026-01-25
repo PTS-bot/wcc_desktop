@@ -6,205 +6,194 @@
     <title>Container Hub</title>
     <style>
         /* --- 🌌 Deep Space Theme --- */
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #918686; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow: hidden; 
+            background: #090a0f; 
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
         
-        /* Header Bar */
+        /* Header Bar - ปรับให้ยืดหยุ่นรองรับเมนูเยอะ */
         .header {
-            height: 60px;
+            min-height: 60px;
+            height: auto; /* ให้ความสูงขยายตามจำนวนบรรทัดเมนู */
             background: rgba(10, 10, 15, 0.95);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; align-items: center; 
-            padding: 0 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
-            z-index: 1000; position: relative;
+            display: flex; 
+            flex-wrap: wrap; /* ✅ หัวใจสำคัญ: ให้เมนูขึ้นบรรทัดใหม่ได้ */
+            align-items: center; 
+            padding: 10px 20px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            z-index: 1000; 
+            position: relative;
+            gap: 15px;
         }
 
         .brand { 
-            font-size: 1.2rem; font-weight: bold; color: white; letter-spacing: 1px; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            color: white; 
+            letter-spacing: 1px; 
             text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
-            margin-right: 30px;
             white-space: nowrap;
         }
 
-        /* Menu Container */
+        /* Menu Container - จัดการปุ่มเมนู */
         .nav-menu { 
             display: flex; 
-            gap: 10px; 
-            align-items: center; 
-            flex-grow: 1; /* กินพื้นที่ที่เหลือทั้งหมด เพื่อดันส่วนท้ายไปขวา */
+            flex-wrap: wrap; /* ✅ ให้ปุ่มเมนูตกลงมาบรรทัดใหม่เมื่อเนื้อที่เต็ม */
+            gap: 8px;
+            flex: 1; /* กินพื้นที่ที่เหลือเพื่อผลัก User Section ไปขวา */
         }
-        
-        /* ปุ่มเมนูทั่วไป */
+
         .nav-item {
-            padding: 8px 20px; 
-            color: #aaa; 
-            text-decoration: none; 
-            border-radius: 4px;
-            font-size: 0.9rem; 
-            transition: 0.3s; 
-            cursor: pointer; 
-            border: 1px solid transparent;
+            padding: 6px 14px;
             background: rgba(255, 255, 255, 0.05);
-            letter-spacing: 0.5px;
-        }
-        .nav-item:hover { 
-            background: rgba(255, 255, 255, 0.1); 
-            color: white; 
-            border-color: rgba(255,255,255,0.2); 
-        }
-        
-        /* Active State */
-        .nav-item.active { 
-            background: rgba(0, 210, 255, 0.15); 
-            color: #00d2ff; 
-            font-weight: bold; 
-            border-color: rgba(0, 210, 255, 0.3); 
-            box-shadow: 0 0 10px rgba(0, 210, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.3s;
+            white-space: nowrap;
         }
 
-        /* ปุ่ม Admin Panel (Special Style) */
-        .admin-btn {
-            margin-left: auto; /* 🔥 สำคัญ: ดันตัวเองไปขวาสุดของ container */
-            border: 1px solid rgba(255, 71, 87, 0.3);
-            color: #ff6b81;
-        }
-        .admin-btn:hover {
-            background: rgba(255, 71, 87, 0.1);
-            color: #ff4757;
-            border-color: #ff4757;
-        }
-        .admin-btn.active {
-            background: rgba(255, 71, 87, 0.2);
-            color: #ff4757;
-            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+        .nav-item:hover {
+            background: rgba(0, 210, 255, 0.15);
+            color: #00d2ff;
+            border-color: #00d2ff;
         }
 
-        /* User Profile */
-        .user-profile { 
-            display: flex; align-items: center; gap: 15px; color: white; font-size: 0.9rem; 
-            padding-left: 20px; border-left: 1px solid rgba(255,255,255,0.1); margin-left: 15px;
+        .nav-item.active {
+            background: #00d2ff;
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
         }
-        .logout-btn {
-            background: transparent; color: #aaa; border: 1px solid #444; padding: 5px 12px;
-            border-radius: 4px; cursor: pointer; font-size: 0.8rem; transition: 0.2s;
-        }
-        .logout-btn:hover { border-color: #ff4757; color: #ff4757; }
 
-        /* Iframe-------------------------------------------------------------------------------------------------- */
-        #mainFrame {
-            width: 100%; height: calc(100vh - 60px); border: none;
-            background: #b9afaf;
-            
+        /* User Section - ส่วนชื่อผู้ใช้และปุ่ม Logout */
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto; /* ผลักไปขวาสุด */
+            background: rgba(255, 255, 255, 0.03);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .user-name { color: #00d2ff; font-weight: bold; font-size: 0.9rem; }
+
+        .btn-logout {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-logout:hover { background: #c0392b; }
+
+        /* Main Viewport */
+        .main-container {
+            flex: 1; /* ให้ iframe กินพื้นที่ที่เหลือจาก Header ทั้งหมด */
+            position: relative;
+            background: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="brand">WCC</div> <div class="nav-menu" id="dynamicMenu">
+        <div class="brand">HUB</div>
+        
+        <div class="nav-menu" id="menuContainer">
             </div>
 
-        <div class="user-profile">
-            <span id="displayUser">User</span>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+        <div class="user-section">
+            <span class="user-name" id="displayUser">User</span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
         </div>
     </div>
 
-    <iframe id="mainFrame" src=""></iframe>
+    <div class="main-container">
+        <iframe id="mainFrame" name="mainFrame" src=""></iframe>
+    </div>
 
     <script src="menu_config.js"></script>
 
     <script>
-        // 🚀 MAIN LOGIC
-        const user = JSON.parse(sessionStorage.getItem('currentUser'));
-
-        // 1. Check Login
-        if (!user) {
+        // ตรวจสอบ Login
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (!currentUser) {
             window.location.href = 'index.html';
         } else {
-            document.getElementById('displayUser').innerText = user.username;
-            
-            if (typeof appConfig !== 'undefined') {
-                renderMenu(appConfig.menus);
-            } else {
-                alert("Error: menu_config.js not found!");
-            }
+            document.getElementById('displayUser').innerText = `👤 ${currentUser.username}`;
+            generateMenu();
         }
 
-        // 2. Render Menu Function
-        function renderMenu(menus) {
-            const menuContainer = document.getElementById('dynamicMenu');
-            menuContainer.innerHTML = ''; 
-
+        function generateMenu() {
+            const menuContainer = document.getElementById('menuContainer');
+            const allowedPerms = currentUser.permissions || [];
             let firstAllowedUrl = '';
 
-            // --- A. วนลูปสร้างเมนูทั่วไป (จาก Config) ---
-            menus.forEach(item => {
-                // ข้ามถ้าเป็น Admin Panel (เพราะเราจะสร้างแยกไว้ขวาสุด)
-                if (item.id === 'manage_users') return;
-
-                // เช็คสิทธิ์ (DB Permissions)
-                const isSuperAdmin = (user.role === 'superadmin');
-                const hasPermission = (user.permissions && user.permissions.includes(item.id));
-                
-                if (isSuperAdmin || hasPermission) {
-                    const btn = document.createElement('a');
+            // วนลูปเมนูที่มีทั้งหมดจาก menu_config.js
+            appConfig.menus.forEach(menu => {
+                // แสดงเมนูถ้า User มีสิทธิ์ หรือเป็น Admin/Superadmin
+                if (allowedPerms.includes(menu.id) || currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+                    const btn = document.createElement('div');
                     btn.className = 'nav-item';
-                    btn.innerText = item.name; // ✅ ใส่แค่ชื่อ ไม่เอา Icon
-                    btn.onclick = () => loadPage(item.url, btn);
-                    
+                    btn.innerText = menu.name;
+                    btn.onclick = () => loadPage(menu.url, btn);
                     menuContainer.appendChild(btn);
 
-                    if (!firstAllowedUrl) firstAllowedUrl = item.url;
+                    if (!firstAllowedUrl) firstAllowedUrl = menu.url;
                 }
             });
 
-            // --- B. สร้างปุ่ม Admin Panel (ถ้ามีสิทธิ์) ---
-            // เช็คว่าเป็น Admin หรือ Superadmin
-            if (user.role === 'admin' || user.role === 'superadmin') {
-                const adminBtn = document.createElement('a');
-                adminBtn.className = 'nav-item admin-btn'; // เพิ่ม class admin-btn เพื่อดันไปขวา
-                adminBtn.innerText = 'Admin Panel';
-                adminBtn.onclick = () => loadPage('admin-view.html', adminBtn); // ไฟล์ Admin ของคุณ
-                
+            // ถ้าเป็น Admin ให้เพิ่มปุ่ม Admin Panel ท้ายสุด
+            if (currentUser.role === 'admin' || currentUser.role === 'superadmin') {
+                const adminBtn = document.createElement('div');
+                adminBtn.className = 'nav-item';
+                adminBtn.style.borderColor = '#f1c40f';
+                adminBtn.style.color = '#f1c40f';
+                adminBtn.innerText = '⚙️ Admin Panel';
+                adminBtn.onclick = () => loadPage('admin-view.html', adminBtn);
                 menuContainer.appendChild(adminBtn);
-
-                // ถ้าไม่มีหน้าอื่นให้เข้าเลย ก็เปิด Admin เป็นหน้าแรก
+                
                 if (!firstAllowedUrl) firstAllowedUrl = 'admin-view.html';
             }
 
-            // --- C. เปิดหน้าแรกอัตโนมัติ ---
+            // โหลดหน้าแรกอัตโนมัติ
             if (firstAllowedUrl) {
-                // หาปุ่มที่ตรงกับ url แรกเพื่อ set active
-                // (แบบง่ายๆ คือโหลดเลย แล้วค่อยไปไล่ set active ทีหลัง)
                 const allBtns = menuContainer.querySelectorAll('.nav-item');
-                if (allBtns.length > 0) {
-                    // ถ้าปุ่มแรกไม่ใช่ Admin ให้คลิกปุ่มแรก
-                    // ถ้ามีแต่ Admin ก็คลิก Admin
-                    if(allBtns[0].innerText !== 'Admin Panel' || allBtns.length === 1) {
-                         allBtns[0].click();
-                    } else {
-                        // กรณีที่ปุ่ม Admin อยู่ขวาสุด แต่อยากให้มัน Active ถ้าไม่มีอย่างอื่น
-                        loadPage(firstAllowedUrl, null); 
-                        // เนื่องจากเรา create element แบบ dynamic การหา element เพื่อ add class active อาจจะยาก
-                        // ให้ user กดเอง หรือ set default ไปก่อน
-                    }
-                }
-            } else {
-                document.getElementById('mainFrame').src = 'about:blank';
+                if (allBtns.length > 0) allBtns[0].click();
             }
         }
 
         function loadPage(url, el) {
             document.getElementById('mainFrame').src = url;
-            
-            // Toggle Active Class
+            // สลับสถานะปุ่ม Active
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            if(el) el.classList.add('active');
+            if (el) el.classList.add('active');
         }
 
         function logout() {
             sessionStorage.clear();
-            fetch('/api/logout', { method: 'POST' }).catch(e => console.log(e));
             window.location.href = 'index.html';
         }
     </script>
