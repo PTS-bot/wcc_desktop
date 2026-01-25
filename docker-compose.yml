@@ -1,4 +1,3 @@
-
 services:
 
 # ---------------------------------------------------------------------------------------------------------
@@ -9,418 +8,217 @@ services:
       dockerfile: dockerfile.gateway  
     container_name: web-gateway
     volumes:
-    #   - ./web_porxy_nginx:/var/www/dashboard    
-      - ./web_proxy_nginx:/usr/share/nginx/html # 👈 Map ไฟล์ HTML
-      - ./web_proxy_nginx/nginx.conf:/etc/nginx/nginx.conf # 👈 Map Config Nginx
+      - ./web_proxy_nginx:/usr/share/nginx/html
+      - ./web_proxy_nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "6688:8080"
     depends_on:
       - auth-service         
 
   auth-service:
-    image: node:18-alpine  # ใช้ Image Node สำเร็จรูป ไม่ต้อง install เอง
+    image: node:18-alpine
     container_name: auth-service
     working_dir: /app
     volumes:
-      # ✅ ใช้ Volume เดียวกับ Nginx เลย เพื่อให้อ่านไฟล์ users.json ตัวเดียวกันได้
       - ./web_proxy_node:/app 
     command: sh -c "npm install express body-parser cors express-session mongoose && node server.js"
-    # ports:
-    #   - "3000:3000"
     restart: always
     depends_on:
-      - mongo # บอกให้รอ mongo รันก่อน (ระดับ network)
+      - mongo
 
   mongo:
     image: mongo:latest
     container_name: mongodb
     restart: always
-    # ports:
-    #   - "27017:27017"
     volumes:
-      - ./web_proxy_mongo:/data/db  # Map ข้อมูลออกมาข้างนอก กันข้อมูลหาย
-
-
+      - ./web_proxy_mongo:/data/db
 
 # -------------------------------------------------------------------------------------------------------
- 
+# Kali Linux Webtop Configuration (using Anchor to keep it clean)
 
-  webtop1:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+  webtop1: &kali-config
+    image: lscr.io/linuxserver/kali-linux:latest
     container_name: webtop1
     security_opt:
-      - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
+      - seccomp:unconfined
     environment:
-      - PUID=1000 # User ID
-      - PGID=1000 # Group ID
-      - TZ=Asia/Bangkok # ตั้งเวลาเป็นไทย
-      - SUBFOLDER=/webtop1/ # (Optional) ถ้าใช้ Reverse Proxy
-      # - KEYBOARD=en-us-qwerty # (Optional) ตั้งค่าคีย์บอร์ด
-    # volumes:
-    #   - ./work_space/web_desktop:/config # เก็บข้อมูล Home Directory ไว้ที่นี่เพื่อไม่ให้ข้อมูลหาย
-      # - /var/run/docker.sock:/var/run/docker.sock # (Optional) เปิดบรรทัดนี้ถ้าอยากรัน Docker ซ้อนข้างใน
-    # ports:
-    #   - 3100:3000 # พอร์ตสำหรับเข้าผ่าน HTTP
-    #   - 3101:3001 # พอร์ตสำหรับเข้าผ่าน HTTPS
-    shm_size: "1gb" # สำคัญมาก! ต้องตั้งค่านี้ไม่งั้น Browser ใน Webtop จะแครชบ่อย
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Bangkok
+      - SUBFOLDER=/webtop1/
+    shm_size: "2gb" # เพิ่มเป็น 2gb เพื่อกัน Browser Crash
     restart: unless-stopped
 
   webtop2:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop2
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok
-        - SUBFOLDER=/webtop2/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop2
+    environment:
+      - SUBFOLDER=/webtop2/
 
   webtop3:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop3
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop3/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop3
+    environment:
+      - SUBFOLDER=/webtop3/
 
   webtop4:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop4
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop4/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop4
+    environment:
+      - SUBFOLDER=/webtop4/
 
   webtop5:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop5
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop5/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop5
+    environment:
+      - SUBFOLDER=/webtop5/
 
   webtop6:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop6
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop6/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop6
+    environment:
+      - SUBFOLDER=/webtop6/
 
   webtop7:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop7
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop7/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop7
+    environment:
+      - SUBFOLDER=/webtop7/
 
   webtop8:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop8
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop8/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop8
+    environment:
+      - SUBFOLDER=/webtop8/
 
   webtop9:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop9
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop9/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop9
+    environment:
+      - SUBFOLDER=/webtop9/
 
   webtop10:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop10
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop10/ 
-      shm_size: "1gb" 
-
-# ----------- 10 ----------------------------------------------------------------------------------------------
+    <<: *kali-config
+    container_name: webtop10
+    environment:
+      - SUBFOLDER=/webtop10/
 
   webtop11:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    <<: *kali-config
     container_name: webtop11
-    security_opt:
-      - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
     environment:
-      - PUID=1000 # User ID
-      - PGID=1000 # Group ID
-      - TZ=Asia/Bangkok # ตั้งเวลาเป็นไทย
-      - SUBFOLDER=/webtop11/ # (Optional) ถ้าใช้ Reverse Proxy
-    shm_size: "1gb" 
-    restart: unless-stopped
+      - SUBFOLDER=/webtop11/
 
   webtop12:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop12
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok
-        - SUBFOLDER=/webtop12/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop12
+    environment:
+      - SUBFOLDER=/webtop12/
 
   webtop13:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop13
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop13/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop13
+    environment:
+      - SUBFOLDER=/webtop13/
 
   webtop14:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop14
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop14/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop14
+    environment:
+      - SUBFOLDER=/webtop14/
 
   webtop15:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop15
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop15/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop15
+    environment:
+      - SUBFOLDER=/webtop15/
 
   webtop16:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop16
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop16/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop16
+    environment:
+      - SUBFOLDER=/webtop16/
 
   webtop17:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop17
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop17/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop17
+    environment:
+      - SUBFOLDER=/webtop17/
 
   webtop18:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop18
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop18/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop18
+    environment:
+      - SUBFOLDER=/webtop18/
 
   webtop19:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop19
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop19/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop19
+    environment:
+      - SUBFOLDER=/webtop19/
 
   webtop20:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop20
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop20/ 
-      shm_size: "1gb" 
-
-# ----------- 20 ----------------------------------------------------------------------------------------------
+    <<: *kali-config
+    container_name: webtop20
+    environment:
+      - SUBFOLDER=/webtop20/
 
   webtop21:
-    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    <<: *kali-config
     container_name: webtop21
-    security_opt:
-      - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
     environment:
-      - PUID=1000 # User ID
-      - PGID=1000 # Group ID
-      - TZ=Asia/Bangkok # ตั้งเวลาเป็นไทย
-      - SUBFOLDER=/webtop21/ # (Optional) ถ้าใช้ Reverse Proxy
-    shm_size: "1gb" 
-    restart: unless-stopped
+      - SUBFOLDER=/webtop21/
 
   webtop22:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop22
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok
-        - SUBFOLDER=/webtop22/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop22
+    environment:
+      - SUBFOLDER=/webtop22/
 
   webtop23:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop23
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop23/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop23
+    environment:
+      - SUBFOLDER=/webtop23/
 
   webtop24:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop24
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop24/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop24
+    environment:
+      - SUBFOLDER=/webtop24/
 
   webtop25:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop25
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop25/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop25
+    environment:
+      - SUBFOLDER=/webtop25/
 
   webtop26:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop26
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop26/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop26
+    environment:
+      - SUBFOLDER=/webtop26/
 
   webtop27:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop27
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop27/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop27
+    environment:
+      - SUBFOLDER=/webtop27/
 
   webtop28:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop28
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop28/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop28
+    environment:
+      - SUBFOLDER=/webtop28/
 
   webtop29:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop29
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop29/ 
-      shm_size: "1gb" 
-
+    <<: *kali-config
+    container_name: webtop29
+    environment:
+      - SUBFOLDER=/webtop29/
 
   webtop30:
-      image: lscr.io/linuxserver/webtop:ubuntu-xfce
-      container_name: webtop30
-      security_opt:
-        - seccomp:unconfined # จำเป็นเพื่อให้บางโปรแกรมทำงานได้สมบูรณ์
-      environment:
-        - PUID=1000 # User ID
-        - PGID=1000 # Group ID
-        - TZ=Asia/Bangkok 
-        - SUBFOLDER=/webtop30/ 
-      shm_size: "1gb" 
+    <<: *kali-config
+    container_name: webtop30
+    environment:
+      - SUBFOLDER=/webtop30/
