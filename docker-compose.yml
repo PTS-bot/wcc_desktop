@@ -67,83 +67,83 @@ services:
     environment:
       - SUBFOLDER=/webtop2/
 
-  # webtop3:
-  #   <<: *kali-config
-  #   container_name: webtop3
-  #   environment:
-  #     - SUBFOLDER=/webtop3/
+  webtop3:
+    <<: *kali-config
+    container_name: webtop3
+    environment:
+      - SUBFOLDER=/webtop3/
 
-  # webtop4:
-  #   <<: *kali-config
-  #   container_name: webtop4
-  #   environment:
-  #     - SUBFOLDER=/webtop4/
+  webtop4:
+    <<: *kali-config
+    container_name: webtop4
+    environment:
+      - SUBFOLDER=/webtop4/
 
-  # webtop5:
-  #   <<: *kali-config
-  #   container_name: webtop5
-  #   environment:
-  #     - SUBFOLDER=/webtop5/
+  webtop5:
+    <<: *kali-config
+    container_name: webtop5
+    environment:
+      - SUBFOLDER=/webtop5/
 
-  # webtop6:
-  #   <<: *kali-config
-  #   container_name: webtop6
-  #   environment:
-  #     - SUBFOLDER=/webtop6/
+  webtop6:
+    <<: *kali-config
+    container_name: webtop6
+    environment:
+      - SUBFOLDER=/webtop6/
 
-  # webtop7:
-  #   <<: *kali-config
-  #   container_name: webtop7
-  #   environment:
-  #     - SUBFOLDER=/webtop7/
+  webtop7:
+    <<: *kali-config
+    container_name: webtop7
+    environment:
+      - SUBFOLDER=/webtop7/
 
-  # webtop8:
-  #   <<: *kali-config
-  #   container_name: webtop8
-  #   environment:
-  #     - SUBFOLDER=/webtop8/
+  webtop8:
+    <<: *kali-config
+    container_name: webtop8
+    environment:
+      - SUBFOLDER=/webtop8/
 
-  # webtop9:
-  #   <<: *kali-config
-  #   container_name: webtop9
-  #   environment:
-  #     - SUBFOLDER=/webtop9/
+  webtop9:
+    <<: *kali-config
+    container_name: webtop9
+    environment:
+      - SUBFOLDER=/webtop9/
 
-  # webtop10:
-  #   <<: *kali-config
-  #   container_name: webtop10
-  #   environment:
-  #     - SUBFOLDER=/webtop10/
+  webtop10:
+    <<: *kali-config
+    container_name: webtop10
+    environment:
+      - SUBFOLDER=/webtop10/
 
-  # webtop11:
-  #   <<: *kali-config
-  #   container_name: webtop11
-  #   environment:
-  #     - SUBFOLDER=/webtop11/
+  webtop11:
+    <<: *kali-config
+    container_name: webtop11
+    environment:
+      - SUBFOLDER=/webtop11/
 
-  # webtop12:
-  #   <<: *kali-config
-  #   container_name: webtop12
-  #   environment:
-  #     - SUBFOLDER=/webtop12/
+  webtop12:
+    <<: *kali-config
+    container_name: webtop12
+    environment:
+      - SUBFOLDER=/webtop12/
 
-  # webtop13:
-  #   <<: *kali-config
-  #   container_name: webtop13
-  #   environment:
-  #     - SUBFOLDER=/webtop13/
+  webtop13:
+    <<: *kali-config
+    container_name: webtop13
+    environment:
+      - SUBFOLDER=/webtop13/
 
-  # webtop14:
-  #   <<: *kali-config
-  #   container_name: webtop14
-  #   environment:
-  #     - SUBFOLDER=/webtop14/
+  webtop14:
+    <<: *kali-config
+    container_name: webtop14
+    environment:
+      - SUBFOLDER=/webtop14/
 
-  # webtop15:
-  #   <<: *kali-config
-  #   container_name: webtop15
-  #   environment:
-  #     - SUBFOLDER=/webtop15/
+  webtop15:
+    <<: *kali-config
+    container_name: webtop15
+    environment:
+      - SUBFOLDER=/webtop15/
 
   # webtop16:
   #   <<: *kali-config
