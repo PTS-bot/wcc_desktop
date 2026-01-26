@@ -364,14 +364,39 @@
 
         // --- CSV Logic (ปรับปรุงให้รองรับ Column 3=webtop1, 4=webtop2) ---
         function downloadCSVFormat() {
-            const csvContent = "username,password,perm1,perm2\nuser01,1234,webtop1,webtop2";
+            // กำหนด Header 
+            let csvContent = "username,password";
+
+            // สร้างหัว Column ตามจำนวนเมนูที่มีในระบบ (webtop1, webtop2...) 
+            const menuIds = appConfig.menus
+                .filter(m => m.id !== 'manage_users' && m.id !== 'users')
+                .map(m => m.id);
+
+            menuIds.forEach((id, index) => {
+                csvContent += `,perm${index + 1}`;
+            });
+            csvContent += "\n";
+
+            // วนลูป User ทั้งหมดเพื่อดึงค่าปัจจุบัน 
+            allUsers.forEach(user => {
+                // คอลัมน์ 1: Username, คอลัมน์ 2: Password (ปล่อยว่าง) 
+                let row = `${user.username},`;
+
+                // คอลัมน์ต่อๆ ไป: ใส่ Permission ที่ user คนนั้นมีอยู่จริง 
+                const userPerms = user.permissions || [];
+                menuIds.forEach(mId => {
+                    row += userPerms.includes(mId) ? `,${mId}` : ",";
+                });
+                csvContent += row + "\n";
+            });
+
+            // สร้างไฟล์ให้ดาวน์โหลด 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", "user_import_format.csv");
+            link.setAttribute("download", `user_permissions_export.csv`);
             link.click();
         }
-
         async function handleCSV(input) {
             const file = input.files[0];
             if (!file) return;
@@ -381,41 +406,33 @@
                 const rows = e.target.result.split('\n').filter(r => r.trim() !== '');
                 let count = 0;
 
-                // เริ่มวนลูปที่ i = 1 เพื่อข้าม Header ของ CSV
                 for (let i = 1; i < rows.length; i++) {
                     const cols = rows[i].split(',').map(c => c.trim());
-                    if (cols.length < 2) continue;
+                    if (cols.length < 1) continue;
 
                     const username = cols[0];
-                    const password = cols[1];
-                    // กรองเอาเฉพาะ ID ที่มีค่าจริงๆ และไม่เป็นที่ว่าง
                     const permissions = cols.slice(2).filter(p => p !== '');
-
-                    // 1. ตรวจสอบก่อนว่ามี User นี้อยู่ในระบบหรือยัง
                     const userExists = allUsers.find(u => u.username === username);
 
                     if (userExists) {
-                        // ถ้ามีอยู่แล้ว ให้ Update permissions เพื่อให้ปุ่มขึ้นสี
+                        // UPDATE: ส่งเฉพาะ permissions (password ไม่เปลี่ยน) 
                         const success = await apiPost('/api/update-user', {
                             username: username,
                             permissions: permissions
                         });
                         if (success) count++;
                     } else {
-                        // ถ้ายังไม่มี ให้สร้าง User ใหม่พร้อมกำหนดสิทธิ์ทันที
+                        // CREATE: สร้างใหม่พร้อม password จาก column 2 
+                        const password = cols[1] || '123456'; // ถ้าว่างให้ใส่ default ไว้ก่อน
                         const success = await apiPost('/api/create-user', {
-                            username,
-                            password,
-                            permissions,
-                            status: 'approved'
+                            username, password, permissions, status: 'approved'
                         });
                         if (success) count++;
                     }
                 }
-
                 alert(`ดำเนินการสำเร็จ ${count} รายการ`);
-                input.value = ''; // ล้างค่า input file
-                loadData(); // รีโหลดตารางเพื่อแสดงสีใหม่
+                input.value = '';
+                loadData();
             };
             reader.readAsText(file);
         }
