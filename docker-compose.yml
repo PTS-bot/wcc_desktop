@@ -42,11 +42,11 @@ services:
 # Kali Linux Webtop Configuration (using Anchor to keep it clean)
 
   webtop1: &kali-config
-    build: 
-      context: .
-      dockerfile: dockerfile.webtop    
+    # build: 
+    #   context: .
+    #   dockerfile: dockerfile.webtop    
     # image: lscr.io/linuxserver/webtop:ubuntu-xfce 
-    # image: lscr.io/linuxserver/kali-linux:latest
+    image: lscr.io/linuxserver/kali-linux:latest
     container_name: webtop1
     security_opt:
       - seccomp:unconfined
