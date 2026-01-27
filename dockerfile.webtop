@@ -3,6 +3,8 @@ FROM lscr.io/linuxserver/kali-linux:latest
 
 # ป้องกันการถามคำถามระหว่างติดตั้ง
 ENV DEBIAN_FRONTEND=noninteractive
+ENV SHELL=/bin/bash
+
 
 # 1. ติดตั้ง Dependencies พื้นฐานที่จำเป็นสำหรับ SET และอื่นๆ
 RUN apt-get update && \

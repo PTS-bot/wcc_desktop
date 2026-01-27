@@ -49,6 +49,8 @@ c.ServerApp.allow_origin = '*'
 c.ServerApp.token = '$JUP_TOKEN'
 c.ServerApp.root_dir = '$WORK_DIR'
 c.ServerApp.base_url = '/jupyter'
+
+c.ServerApp.terminado_settings = { 'shell_command': ['/bin/bash'] }
 EOT
 
 # 🔥 สำคัญ: ให้สิทธิ์ทุกคนอ่านไฟล์ config นี้ได้ (ไม่งั้น user abc จะอ่านไม่ได้)
