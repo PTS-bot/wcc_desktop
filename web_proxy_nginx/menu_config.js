@@ -2,6 +2,7 @@ const appConfig = {
     title: "",
     menus: [
         { id: "webtop1", name: "Webtop01", icon: "fas fa-robot", url: "/webtop1/", active: false },
+        { id: "jupyter", name: "Jupyter", icon: "fas fa-robot", url: "/jupyter/", active: false },
 
         // { id: "webtop2", name: "Webtop02", icon: "fas fa-robot", url: "/webtop2/", active: false },
         // { id: "webtop3", name: "Webtop03", icon: "fas fa-robot", url: "/webtop3/", active: false },

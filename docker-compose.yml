@@ -11,11 +11,11 @@ services:
     volumes:
       - ./web_proxy_nginx:/usr/share/nginx/html
       - ./web_proxy_nginx/nginx.conf:/etc/nginx/nginx.conf
-    # ports:
-    #   - "6688:8080"
+    ports:
+      - "6688:8080"
     depends_on:
       - auth-service         
-    network_mode: host        
+    # network_mode: host        
 
   auth-service:
     image: node:18-alpine
@@ -43,11 +43,11 @@ services:
 # Kali Linux Webtop Configuration (using Anchor to keep it clean)
 
   webtop1: &kali-config
-    # build: 
-    #   context: .
-    #   dockerfile: dockerfile.webtop    
+    build: 
+      context: .
+      dockerfile: dockerfile.webtop    
     # image: lscr.io/linuxserver/webtop:ubuntu-xfce 
-    image: lscr.io/linuxserver/kali-linux:latest
+    # image: lscr.io/linuxserver/kali-linux:latest
     container_name: webtop1
     security_opt:
       - seccomp:unconfined
@@ -58,10 +58,11 @@ services:
       - SUBFOLDER=/webtop1/
     shm_size: "4gb" # เพิ่มเป็น 2gb เพื่อกัน Browser Crash
     restart: unless-stopped
-    network_mode: host  
-    # ports:
-    #   - 3000:3000 # HTTP
-    #   - 3001:3001 # HTTPS
+    # network_mode: host  
+    ports:
+      - 3000:3000 # HTTP
+      - 3001:3001 # HTTPS
+      - 8888:8888 # Jupyter (ถ้าจะเข้าตรงไม่ผ่าน Nginx)
     
 
   # webtop2:

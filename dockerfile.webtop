@@ -1,13 +1,10 @@
-# เริ่มจาก Base Image ที่คุณเลือก (Ubuntu XFCE)
-FROM lscr.io/linuxserver/webtop:ubuntu-xfce
+# เริ่มจาก Base Image Kali ของ LinuxServer
+FROM lscr.io/linuxserver/kali-linux:latest
 
-# ป้องกันการถามคำถามระหว่างติดตั้ง (Non-interactive)
+# ป้องกันการถามคำถามระหว่างติดตั้ง
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 1. อัปเดตและติดตั้ง dependencies พื้นฐานที่ SET ต้องใช้
-# - git: เพื่อดึง source code
-# - python3 & pip: SET เขียนด้วย Python
-# - build-essential, libssl-dev...: จำเป็นสำหรับ compile python libraries บางตัว
+# 1. ติดตั้ง Dependencies พื้นฐานที่จำเป็นสำหรับ SET และอื่นๆ
 RUN apt-get update && \
     apt-get install -y \
     git \
@@ -25,19 +22,31 @@ RUN apt-get update && \
 # 2. ติดตั้ง Social Engineering Toolkit (SET)
 WORKDIR /opt
 RUN git clone https://github.com/trustedsec/social-engineer-toolkit.git setoolkit
-
-# 3. ติดตั้ง Python Requirements
 WORKDIR /opt/setoolkit
-# บังคับลงแบบ break-system-packages (สำหรับ Ubuntu รุ่นใหม่) หรือใช้ venv ก็ได้
-# แต่ใน container การลง system-wide ถือว่ายอมรับได้เพื่อให้เรียกใช้ง่าย
 RUN pip3 install -r requirements.txt --break-system-packages
-
-# 4. รัน script ติดตั้งของ SET
 RUN python3 setup.py install
-
-# 5. (Optional) ปรับแต่งให้เรียกใช้ง่ายๆ
-# สร้าง Alias หรือ Symlink ถ้าระบบยังไม่มี
 RUN ln -sf /usr/local/bin/setoolkit /usr/bin/setoolkit
 
-# กลับไปที่ Home ของ user ปกติ
+# -------------------------------------------------------
+# 3. เรียกใช้ Script ติดตั้ง Jupyter
+# -------------------------------------------------------
+# Copy ไฟล์ script เข้าไป
+COPY install_jupyter.sh /tmp/install_jupyter.sh
+
+# ให้สิทธิ์ Executable (+x) และสั่งรัน Script
+# (ใช้ sed -i เพื่อแก้ปัญหา Line ending กรณีแก้ไฟล์บน Windows)
+RUN sed -i 's/\r$//' /tmp/install_jupyter.sh && \
+    chmod +x /tmp/install_jupyter.sh && \
+    /tmp/install_jupyter.sh && \
+    rm /tmp/install_jupyter.sh
+
+# -------------------------------------------------------
+# 4. ตั้งค่า Service ให้ Jupyter รันอัตโนมัติ (S6 Overlay)
+# -------------------------------------------------------
+RUN mkdir -p /etc/services.d/jupyter && \
+    echo '#!/bin/bash' > /etc/services.d/jupyter/run && \
+    echo 'exec jupyter lab --config=/root/.jupyter/jupyter_lab_config.py' >> /etc/services.d/jupyter/run && \
+    chmod +x /etc/services.d/jupyter/run
+
+# กลับไปที่ Home Default
 WORKDIR /config
