@@ -31,22 +31,20 @@ RUN ln -sf /usr/local/bin/setoolkit /usr/bin/setoolkit
 # 3. เรียกใช้ Script ติดตั้ง Jupyter
 # -------------------------------------------------------
 # Copy ไฟล์ script เข้าไป
-COPY install_jupyter.sh /tmp/install_jupyter.sh
+# ... (ส่วนบนเหมือนเดิม จนถึงบรรทัด copy install_jupyter.sh) ...
 
-# ให้สิทธิ์ Executable (+x) และสั่งรัน Script
-# (ใช้ sed -i เพื่อแก้ปัญหา Line ending กรณีแก้ไฟล์บน Windows)
+# 3. เรียกใช้ Script ติดตั้ง Jupyter
+COPY install_jupyter.sh /tmp/install_jupyter.sh
 RUN sed -i 's/\r$//' /tmp/install_jupyter.sh && \
     chmod +x /tmp/install_jupyter.sh && \
     /tmp/install_jupyter.sh && \
     rm /tmp/install_jupyter.sh
 
-# -------------------------------------------------------
-# 4. ตั้งค่า Service ให้ Jupyter รันอัตโนมัติ (S6 Overlay)
-# -------------------------------------------------------
+# 4. ตั้งค่า Service ให้ Jupyter รันอัตโนมัติ
+# 🔥 แก้จุดนี้: เปลี่ยนคำสั่ง exec ให้รันในนาม user abc
 RUN mkdir -p /etc/services.d/jupyter && \
     echo '#!/bin/bash' > /etc/services.d/jupyter/run && \
-    echo 'exec jupyter lab --config=/root/.jupyter/jupyter_lab_config.py' >> /etc/services.d/jupyter/run && \
+    echo 'exec s6-setuidgid abc jupyter lab --config=/opt/jupyter_lab_config.py' >> /etc/services.d/jupyter/run && \
     chmod +x /etc/services.d/jupyter/run
 
-# กลับไปที่ Home Default
 WORKDIR /config

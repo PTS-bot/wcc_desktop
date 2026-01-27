@@ -1,52 +1,57 @@
 #!/bin/bash
-set -e # ถ้ามี error ให้หยุดทันที
+set -e
 
 # ==========================================
-# 1. กำหนดค่าตัวแปร (CONFIG VARIABLES)
+# 1. กำหนดค่าตัวแปร
 # ==========================================
-JUPYTER_PASSWORD="master"      # <--- แก้รหัสผ่านตรงนี้
-BASE_URL="/jupyter"            # Path สำหรับเข้าผ่าน Nginx
-WORK_DIR="/config"             # โฟลเดอร์ทำงาน (Volume ของ Webtop)
+# เปลี่ยน Token ตามใจชอบ
+JUP_TOKEN="${JUPYTER_TOKEN:-master}"       
+# 🔥 เปลี่ยนให้ไปใช้ Folder เดียวกับ Desktop จะได้เห็นไฟล์กัน
+WORK_DIR="/config"             
+REQ_FILE="requirements_python.txt"          
 
-echo "Starting Jupyter Installation..."
-echo "Password set to: $JUPYTER_PASSWORD"
+echo "Starting Installation..."
 
 # ==========================================
-# 2. ติดตั้ง Dependencies และ Jupyter
+# 2. ติดตั้ง Dependencies
 # ==========================================
 apt-get update
 apt-get install -y \
     python3-pip \
     python3-venv \
     openjdk-11-jdk \
+    git \
     curl \
     iputils-ping \
-    net-tools
+    net-tools \
+    sudo  # ลง sudo เผื่อเรียกใช้คำสั่ง root ผ่าน jupyter
 
-pip3 install --no-cache-dir jupyterlab --break-system-packages
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+
+pip3 install --no-cache-dir --upgrade pip
+pip3 install --no-cache-dir jupyterlab
 
 # ==========================================
-# 3. สร้าง Config File
+# 3. สร้าง Config File (ย้ายไปไว้ /opt เพื่อให้ abc อ่านได้)
 # ==========================================
-mkdir -p /root/.jupyter
-CONFIG_FILE="/root/.jupyter/jupyter_lab_config.py"
+# 🔥 ย้าย Config ออกจาก /root ไปไว้ที่ /opt
+CONFIG_FILE="/opt/jupyter_lab_config.py"
 
-# เขียน Config ลงไฟล์
+echo "Generating Jupyter Config at $CONFIG_FILE..."
+
 cat <<EOT > "$CONFIG_FILE"
 c.ServerApp.ip = '0.0.0.0'
 c.ServerApp.port = 8888
 c.ServerApp.open_browser = False
 c.ServerApp.allow_root = True
 c.ServerApp.allow_origin = '*'
-c.ServerApp.token = '$JUPYTER_PASSWORD'
-c.ServerApp.base_url = '$BASE_URL'
+c.ServerApp.token = '$JUP_TOKEN'
 c.ServerApp.root_dir = '$WORK_DIR'
+c.ServerApp.base_url = '/jupyter'
 EOT
 
-echo "Jupyter Configuration created at $CONFIG_FILE"
+# 🔥 สำคัญ: ให้สิทธิ์ทุกคนอ่านไฟล์ config นี้ได้ (ไม่งั้น user abc จะอ่านไม่ได้)
+chmod 644 "$CONFIG_FILE"
 
-# ==========================================
-# 4. ล้างขยะ (Clean up)
-# ==========================================
-apt-get clean
-rm -rf /var/lib/apt/lists/*
+echo "Jupyter installation complete."
